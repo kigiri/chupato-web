@@ -1,0 +1,152 @@
+#menu {
+  height: 65px;
+  line-height: 63px;
+  margin-bottom: 15px;
+  font-size: 20px;
+
+  input[type=text], textarea {
+    outline: none;
+    color: @normal;
+    height: 56px;
+    width: 390px;
+    font-size: 20px;
+    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  input[type=text]:focus, textarea:focus {
+    color: @normal;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  a {
+    color: @normal;
+  }
+
+  .shadow {
+    box-shadow: 0 5px 19px -2px rgba(0, 0, 0, 0.93)!important;
+    i {
+      color: @detail!important;
+    }
+  }
+
+  .text {
+    display: inline;
+    width: calc(~'100% - 53px');
+    margin-left: 49px;
+    position: absolute;
+    text-overflow:ellipsis;
+    overflow: hidden;
+  }
+
+  #search {
+    -webkit-transition: 500ms;
+       -moz-transition: 500ms;
+         -o-transition: 500ms;
+            transition: 500ms;
+    position: absolute;
+    background-color: @bg-light;
+    width: 448px;
+    float: left;
+    z-index: 9999;
+    border: solid 1px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+    border-color: lighten(@bg-light, 5%);
+    &:hover, &:focus {
+      border-color: lighten(@bg-light, 10%);
+    }
+    #dropdown {
+      margin: 0;
+      padding: 0;
+      .focus {
+        box-shadow: 0 0 2px darken(@bg-mid, 10%) inset;
+        background-color: @bg-mid!important;
+        text-shadow: 0 0 3px darken(@bg-mid, 50%);
+      }
+      .alert {
+        background-color: #14493E!important;
+      }
+      a {
+        font-size: 15px;
+        line-height: 28px;
+        list-style-type: none;
+        border-top: solid 1px lighten(@bg-light, 5%);
+        display: block;
+        &:hover {
+          text-shadow: 0 0 3px darken(@bg-light, 50%);
+          box-shadow: 0 0 2px darken(@bg-light, 10%) inset;
+          background-color: lighten(@bg-mid, 4%)!important;
+        }
+        &:focus {
+          text-shadow: 0 0 3px darken(@bg-light, 50%);
+          box-shadow: 0 0 2px darken(@bg-light, 50%) inset;
+          background-color: @bg-mid!important;
+        }
+      }
+      .elem {
+        i {
+          font-size: 15px;
+          width: 26px;
+        }
+        b {
+          color: @highlight;
+        }
+      }
+    }
+    .text {
+      margin-left: 5px;
+    }
+    i {
+      width: 30px;
+      margin: 10px;
+      line-height:5px;
+      color: @bg-mid;
+    }
+  }
+
+  #menu-wrapper {
+    margin-left: 450px;
+    width: calc(~'100% - 450px');
+    float: left;
+    height: 100%;
+
+    a:hover {
+      color: @highlight;
+      i {
+        color: @highlight;
+      }
+    }
+    .current {
+      cursor:default;
+      color: @detail!important;
+      i {
+        color: @detail!important;
+      }
+    }
+    .item {
+      position: relative;
+      background-color: @bg-mid;
+      width: calc(~'20% - 7px');
+      height: 63px;
+      float: left;
+      margin-left: 5px;
+      border: 1px solid;
+      border-color: lighten(@bg-mid, 5%);
+      box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.49);
+      &:focus, &:hover {
+        border-color: lighten(@bg-mid, 10%);
+        box-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
+      }
+    }
+
+    i {
+      position: absolute;
+      color: @bg-light;
+    }
+  }
+}

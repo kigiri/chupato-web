@@ -1,0 +1,26 @@
+div(id="search" ng-class="searchInput ? 'shadow' : ''" ng-keydown="onKeyPress($event)" ng-init='ln = #{JSON.stringify(links)};')
+  i(class="big fa fa-search" ng-class="searchInput ? 'shadow' : ''" class="fadein2")
+  input(type="text" placeholder="#{menu.search[loc.i]}..." ng-model="searchInput" tabindex=1, key-focus)
+  ul(id="dropdown" ng-class="searchInput ? 'show' : 'hidden'" class="hidden")
+    a(href="{{ link.sorted ? link.adr : link.adr + searchInput}}" tabindex="{{$index + 2}}" ng-repeat="link in ln | fuzzyFilter: searchInput | orderBy:'score':true | limitTo: 10" id="result-{{$index}}" ng-class="{focus:$index == searchPosition}" ng-click="searchInput = 'lol'")
+      li(class="elem")
+        i(class="big fa {{ 'fa-' + link.icon }}")
+        span(class="search-link" ng-bind-html="link.html")
+div(id="menu-wrapper")
+  a(ui-sref="home" class="item" id="home" tabindex="12")
+    i(class="big fa fa-home")
+    div(class="text") #{menu.home[loc.i]}
+  a(ui-sref="help" class="item" id="help" tabindex="13")
+    i(class="big fa fa-globe")
+    div(class="text") #{menu.help[loc.i]}
+  a(ui-sref="forum" class="item" id="forum" tabindex="14")
+    i(class="big fa fa-user")
+    div(class="text") Forum
+  a(ui-sref="shop" class="item" id="shop" tabindex="15")
+    i(class="big fa fa-shopping-cart")
+    div(class="text") #{menu.shop[loc.i]}
+  a(ui-sref="community" class="item" id="community" tabindex="16")
+    i(class="big fa fa-trophy")
+    div(class="text") #{menu.community[loc.i]}
+
+//- ctrl+shift+P == install == jade snippet, jade

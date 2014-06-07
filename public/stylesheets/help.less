@@ -1,0 +1,90 @@
+#content {
+  .text {
+    padding: 15px;
+  }
+  #install {
+    margin-top: 30px;
+    img {
+      margin: 15px;
+      width: 300px;
+      height: 780px;
+    }
+    h2.title {
+      margin-bottom: 0;
+      margin-top: 30px;
+      margin-left: 15px;
+      overflow-x: auto;
+    }
+    .text {
+      margin: 15px;
+      overflow-x: auto;
+    }
+  }
+  #faq {
+    .title {
+      margin-bottom: 5px;
+      padding-left: 15px;
+    }
+    .mid-block {
+      background-position: top right;
+      background-image: url('/images/help/faq.jpg');
+      background-size: 530px;
+      background-repeat: no-repeat;
+    }
+    .text {
+      width: 68%;
+    }
+    .question {
+      button {
+        padding: 15px;
+        font-size: 18px;
+        display: block;
+        color: #fff;
+        text-align: left;
+        border-radius: 15px 0;
+        width: 100%;
+        margin-bottom: 15px;
+        outline: none;
+        border-color: lighten(@bg-light, 5%);
+        text-shadow: 0 0 3px darken(@bg-light, 50%);
+        box-shadow: 0 0 2px darken(@bg-light, 10%);
+        &:hover, &:focus {
+          border-color: mix(@highlight, @bg-light, 30%);
+          box-shadow: 0 0 3px darken(@bg-light, 20%);
+        }
+      }
+      .question-text {
+        position: absolute;
+      }
+      i {
+        text-shadow: none;
+        color: @bg-mid;
+        float: right;
+        margin: -10px;
+        &:before {
+         content: @fa-var-plus;
+        }
+      }
+      .open:before {
+        content: @fa-var-minus;
+      }
+    }
+    .answer {
+      text-shadow: 1px 1px 3px @bg-dark;
+      font-size: 16px;
+      display: block;
+      text-align: left;
+      font-style: italic;
+      white-space: pre-line;
+      margin-bottom: 0;
+      padding: 0;
+      height: 0px;
+      padding: 0 15px;
+      overflow: hidden;
+      text-overflow: clip;
+      &.deploy {
+        height: 100%;
+      }
+    }
+  }
+}

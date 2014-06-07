@@ -1,0 +1,38 @@
+div#faq(ng-init="faq = #{JSON.stringify(faq)};")
+  h1.title F A Q
+  div.mid-block
+    div.text
+      div(ng-repeat="topic in faq | orderBy:'question':true")
+        div.question
+          button(ng-click="show = !show; deployDiv($event, show)")
+            i.fa(ng-class='{open:show}')
+            | {{topic.question}}
+          div.answer.smooth-hover
+            div.size {{topic.answer}}
+  div.spacer
+div(ng-repeat="article in news")
+div#install
+  h1.title #{install.title[i]}
+  div.mid-block
+    img.light-block.left(src="/images/help/install.jpg")
+    h2.title #{install.step[i]} : 1
+    div.text.light-block
+      != install.step1[i]
+    h2.title #{install.step[i]} : 2
+    div.text.light-block
+      != install.step2[i]
+    h2.title #{install.step[i]} : 3
+    div.text.light-block
+      != install.step3[i]
+    h2.title #{install.step[i]} : 4
+    div.text.light-block
+      != install.step4[i]
+    div.text.light-block
+      h2.title #{install.step[i]} : 5
+      != install.step5[i]
+    h2.title #{install.step[i]} : 6
+    div.text.light-block
+      != install.step6[i]
+    div.text.light-block
+      a(href="http://arena-tournament.com/forum/viewtopic.php?t=7") Source
+    div.spacer

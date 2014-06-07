@@ -1,0 +1,62 @@
+div(id="logo" class="fadein2")
+  div(id="logo-fg" class="logo-img")
+  div(id="logo-bg" class="logo-img fadein")
+div(id="top-menu")
+  div(class="item" id="realmlist")
+    div(class="menu-wrapper")
+      div(class="title") Realm List
+        span(class="arrow") ▶
+      div(class="underline")
+      div(class="menu")
+        | Logon.chupato.com
+        br
+        | 3.3.5 blizzlike
+        br
+        | #{onlineCount} (fake)  #{banner.onlines[loc.i]}
+  div(class="item" id="connexion" ng-init="tryLeft = #{tryLeft}; active = 0; username = \"#{username}\"; state = \"#{state}\"; errors = #{JSON.stringify(banner.errors[loc.i])}; authTitles = #{JSON.stringify(banner.titles[loc.i])};")
+    div(class="menu-wrapper ng-cloak" )
+      div(class="title" ng-switch="state")
+        span(ng-switch-when="on") #{banner.welcome[loc.i]} {{ username }} 
+          span(class="arrow") ▶
+        span(ng-switch-when="off") {{ authTitles[active] }}
+          span(class="arrow") ▶
+        span(class="errors" ng-switch-default) {{ errors[state] }}
+      div(class="underline")
+      div(class="menu")
+        form(name="auth" ng-class="active ? 'active' : ''" class="smooth-hover ng-cloak")
+          label(for="name-tf") #{banner.account[loc.i]}
+            input(id="name-tf" type="text" ng-disabled="((active === 3) || !active)" ng-model="auth.account")
+          label(for="pass-tf" ng-class="(active === 3) ? 'hidden' : 'showed'") Pass
+            input(id="pass-tf" type="password" ng-model="auth.pass" ng-disabled="!active")
+          label(for="confirm-tf" ng-class="(active === 3) ? 'showed' : 'hidden'") #{banner.confirm[loc.i]}
+            input(id="confirm-tf" type="password" ng-model="auth.confirm"  ng-disabled="!active")
+          label(for="email-tf" ng-if="(active === 1)")
+            span(ng-if="tryLeft <= 0") {{ (-tryLeft) }} #{banner.wait[loc.i]}
+            span(ng-if="tryLeft > 0") {{ tryLeft }} #{banner.tryLeft[loc.i]}
+          label(for="email-tf" ng-if="(active !== 1)") Email
+            input(id="email-tf" type="text" ng-disabled="((active === 3) || !active)" ng-model="auth.email")
+          div(ng-if="active")
+            div(ng-switch="active")
+              button(ng-click="authClick('next')" class="smooth-hover" id="ok" ng-switch-when="2") #{banner.next[loc.i]} ->
+              button(ng-click="authClick('submit')" class="smooth-hover" id="ok" ng-switch-default) #{banner.submit[loc.i]} ->
+            button(ng-click="authClick('prev')" class="smooth-hover" id="back") <- #{banner.back[loc.i]}
+            div(class="spacer")
+          div(class="spacer")
+        div(ng-switch="state")
+          div(ng-switch-when="on")
+            button(ng-click="authClick('logout')" class="smooth-hover") -> #{banner.profil[loc.i]}
+            button(ng-click="authClick('logout')" class="smooth-hover") -> #{banner.inbox[loc.i]}
+            button(ng-click="authClick('logout')" class="smooth-hover") -> #{banner.tickets[loc.i]}
+            button(ng-click="authClick('logout')" class="smooth-hover") -> #{banner.logout[loc.i]}
+          div(ng-switch-default ng-if="active === 0")
+            button(ng-click="authClick('inscription')" class="smooth-hover" id="auth-origin") -> Inscription
+            button(ng-click="authClick('login')" class="smooth-hover") -> #{banner.login[loc.i]}
+  div(class="item" id="lang")
+    div(class="menu-wrapper")
+      div(class="title") #{banner.language[loc.i]}
+        span(class="arrow") ▶
+      div(class="underline")
+      div(class="menu")
+        button(ng-click="setLang('en')" ng-disabled="loc.name == 'en'" class="smooth-hover") -> EN
+        button(ng-click="setLang('fr')" ng-disabled="loc.name == 'fr'" class="smooth-hover") -> FR
+div(class="spacer")
