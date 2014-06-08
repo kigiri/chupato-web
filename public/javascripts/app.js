@@ -10,32 +10,32 @@ var app = angular
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: '/home-template',
+        templateUrl: '/templates/home',
         controller: 'homeCtrl'
       })
       .state('help', {
         url: '/help',
-        templateUrl: '/help-template',
+        templateUrl: '/templates/help',
         controller: 'helpCtrl'
       })
       .state('forum', {
         url: '/forum',
-        templateUrl: '/forum-template',
+        templateUrl: '/templates/forum',
         controller: 'forumCtrl'
       })
       .state('shop', {
         url: '/shop',
-        templateUrl: '/shop-template',
+        templateUrl: '/templates/shop',
         controller: 'shopCtrl'
       })
       .state('community', {
         url: '/community',
-        templateUrl: '/community-template',
+        templateUrl: '/templates/community',
         controller: 'communityCtrl'
       })
       .state('chupastaff', {
         url: '/chupastaff',
-        templateUrl: '/chupastaff-template',
+        templateUrl: '/templates/chupastaff',
         controller: 'chupastaffCtrl'
       });
   }]);
@@ -136,30 +136,50 @@ app.controller('menuCtrl', function($scope, $timeout, $http, chupaData) {
       case 'submit':
         if (!hasErrors()) {
           if ($scope.active === 1) {
-            $http.post('/login', { account: $scope.auth.account, pass: $scope.auth.pass }).then(function(result) {
-              var ret = result.data;
-              $scope.tryLeft--;
-              if ($scope.tryLeft < 1) { startCountDown(59, 1000); }
-              if (!isNaN(ret)) {
-                var sec = Math.floor(ret / 1000);
-                var left = (ret - (sec * 1000)) - 50;
-                if (left > 0) { left = 1; }
-                startCountDown(sec, left);
-              }
-              else {
-                switch (ret) {
-                  case "ERR_FOUND": sendError(2, $scope.sel[0]); break;
-                  case "ERR_MATCH": sendError(6, $scope.sel[1]); break;
-                  default:
-                    $scope.tryLeft = 3;
-                    $scope.username = ret;
-                    $scope.state = "on";
-                    $scope.active = 0;
-                  break;
+            $http
+              .post('/login', { account: $scope.auth.account, pass: $scope.auth.pass })
+              .then(function(result) {
+                var ret = result.data;
+                $scope.tryLeft--;
+                if ($scope.tryLeft < 1) { startCountDown(59, 1000); }
+                if (!isNaN(ret)) {
+                  var sec = Math.floor(ret / 1000);
+                  var left = (ret - (sec * 1000)) - 50;
+                  if (left > 0) { left = 1; }
+                  startCountDown(sec, left);
                 }
-              }
-            });
-          } else { alert('Account creation Comming Soon :)'); }
+                else {
+                  switch (ret) {
+                    case "ERR_FOUND": sendError(2, $scope.sel[0]); break;
+                    case "ERR_MATCH": sendError(6, $scope.sel[1]); break;
+                    default:
+                      $scope.tryLeft = 3;
+                      $scope.username = ret;
+                      $scope.state = "on";
+                      $scope.active = 0;
+                    break;
+                  }
+                }
+              });
+          } else {
+            $http
+              .post('/register', { "account": $scope.auth.account, "pass": $scope.auth.pass, "mail": $scope.auth.email })
+              .then(function(result) {
+                 switch (result.data) {
+                   case "ERR_ALREADY_EXISTS": sendError(2, $scope.sel[0]); break; // TODO, name this error properly
+                   case "ERR_TOO_SHORT":      sendError(4, $scope.sel[0]); break;
+                   case "ERR_TOO_LONG":       sendError(3, $scope.sel[0]); break;
+                   case "ERR_INVALID":        sendError(2, $scope.sel[0]); break;
+                   case "ERR_MAIL_FORMAT":    sendError(1, $scope.sel[3]); break;
+                   default:
+                     $scope.tryLeft = 3;
+                     $scope.username = result.data;
+                     $scope.state = "on";
+                     $scope.active = 0;
+                   break;
+                 }
+              });
+          }
         } break;
       default: break;
     }

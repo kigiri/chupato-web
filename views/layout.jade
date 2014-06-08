@@ -7,11 +7,11 @@ html(ng-app="app")
     div(id="wrapper", ng-init='loc = #{JSON.stringify(loc)}; test = #{JSON.stringify(banner)}')
       div(ng-controller="menuCtrl")
         div(id="banner")
-          include banner
+          include ui/banner
         div(id="menu")
-          include menu
+          include ui/menu
       div(id="content" class="fadein2")
         div(ui-view)
       div(id="footer")
-        include footer
+        include ui/footer
     include scripts

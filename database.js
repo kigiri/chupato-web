@@ -46,17 +46,24 @@ function initCacheAuthData(cache) {
 function insertLink(cache, name, adr, icon, localeIndex) {
     connection.query('INSERT INTO website.links (name, adr, icon, locale) VALUES (?, ?, ?, ?);', [name, adr, icon, localeIndex],
         function (err, docs) {
-            if (err)
-                console.log(err);
+            if (err) { console.log(err); }
             else {
                 var v = this.values;
                 if (v[3] == 0) {
                     for (var i = locales.length - 1; i > 0; i--)
                         locales[i].links.push({ name: v[0], adr: v[1], icon: v[2], sorted: 1 });
                 }
-                else
-                    locales[v[3]].links.push({ name: v[0], adr: v[1], icon: v[2], sorted: 1 });
+                else { locales[v[3]].links.push({ name: v[0], adr: v[1], icon: v[2], sorted: 1 }); }
             }
+        }
+    );
+}
+
+function insertUser(username, hash, email) {
+    connection.query('INSERT INTO chupato_auth.account (username, sha_pass_hash, email) VALUES (?, ?, ?);', [username, hash, email],
+        function (err, docs) {
+            if (err) { console.log(err); }
+            else { accounts.push({ 'id': docs.insertId, 'username': this.values[0], 'hash': this.values[1] }); }
         }
     );
 }
@@ -126,6 +133,24 @@ var auth = {
             return username;
         }
         return "ERR_MATCH"; // Account and Password doesn't match
+    },
+    register: function(session, username, pass, email) {
+        if (this.getHash(username) !== false)
+            return "ERR_ALREADY_EXISTS";
+        if (username.length < 2)
+            return "ERR_TOO_SHORT";
+        if (username.length > 14)
+            return "ERR_TOO_LONG";
+        if (!username.match(/^[0-9a-zA-Z-_.]{2,14}$/))
+            return "ERR_INVALID";
+        if (!email.match(/[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\.[a-zA-Z]{2,4}/))
+            return "ERR_MAIL_FORMAT";
+        console.log(">>> New User : ", username);
+        insertUser(username, this.makeHash(username, pass), email);
+        username = username[0] + username.slice(1).toLowerCase();
+        session.username = username;
+        session.state = 'on';
+        return username;
     },
 };
 

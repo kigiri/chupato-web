@@ -1,16 +1,37 @@
 var express = require('express');
 var router = express.Router();
+var db = require('../database.js');
+var data = require('../data/locales.js');
+var cache = db.getCache();
 
-/* GET users listing. */
-router.get('/users', function (req, res) {
-  connection.query('SELECT * FROM nodejs', function(err, docs) {
-  res.render('users', {users: docs});
-  });
+router.post('/login', function (req, res) {
+  if (!req.body.pass || !req.body.account) { res.send("error"); }
+  else {
+    var now = new Date(Date.now()).getTime();
+    req.session.tryCount++;
+    if (req.session.tryCount < 4) { req.session.lastTryTimeout = now + 60000; }
+    else {
+      var timeLeft = req.session.lastTryTimeout - now;
+      if (timeLeft > 1) {
+        req.session.tryCount = 1;
+        req.session.lastTryTimeout = now + 60000;
+      }
+    }
+    res.send(db.getAuth().login(req.session, req.body.account.toUpperCase(), req.body.pass));
+  }
 });
 
-// Add a new User
-router.get("/users/new", function (req, res) {
-  res.render('new', { title: 'new' });
+router.post('/register', function (req, res) {
+  var mail = req.body.mail;
+  var pass = req.body.pass;
+  var username = req.body.account;
+  if (!mail || !pass || !username) { res.send("error"); }
+  else { res.send(db.getAuth().register(req.session, username.toUpperCase(), pass, mail)); }
+});
+
+router.post('/logout', function (req, res) {
+  defaultSession(req.session);
+  res.send("ok");
 });
 
 module.exports = router;

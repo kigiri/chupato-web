@@ -3,7 +3,6 @@ var router = express.Router();
 var db = require('../database.js');
 var data = require('../data/locales.js');
 var cache = db.getCache();
-/* GET home page. */
 
 function defaultSession(session) {
   if (!session.lang)
@@ -59,11 +58,6 @@ router.get(['/', '/fr/', '/fr', '/en', '/en/', '/en/undefined/fr/', '/fr/undefin
   res.redirect('/#/');
 });
 
-/* GET home page. */
-router.get('/home-template', function  (req, res) {
-  res.render('home', { title: 'Home' });
-});
-
 router.post('/en/link', function (req, res) {
   var posted = req.body;
   var name;
@@ -82,56 +76,6 @@ router.post('/en/link', function (req, res) {
   }
   cache.addLink(name, adr, posted.icon, common);
   res.redirect('/#/chupastaff');
-});
-
-router.get('/chupastaff-template', function (req, res) {
-  res.render('chupastaff', { title: 'Chupastaff', locales: cache.getLocales() });
-});
-
-router.get('/help-template', function (req, res) {
-  var i = cache.getLocaleIndex(req.session.lang);
-  var loc = cache.getLocale(i);
-  res.render('help', { "title": 'help', "faq": loc.faq, "install": data.install, "i":i });
-});
-
-router.post('/login', function (req, res) {
-  if (!req.body.pass || !req.body.account) { res.send("error"); }
-  else {
-    var now = new Date(Date.now()).getTime();
-    req.session.tryCount++;
-    if (req.session.tryCount < 4) { req.session.lastTryTimeout = now + 60000; }
-    else {
-      var timeLeft = req.session.lastTryTimeout - now;
-      if (timeLeft > 1) àé // Send time left to prevent bruteforce
-      req.session.tryCount = 1;
-      req.session.lastTryTimeout = now + 60000;
-    }
-    res.send(db.getAuth().login(req.session, req.body.account.toUpperCase(), req.body.pass));
-  }
-});
-
-router.post('/create', function (req, res) {
-  if (!req.body.pass || !req.body.account || !req.body.email)
-    res.send("error");
-  else
-    res.send(db.getAuth().create(req.session, req.body.account.toUpperCase(), req.body.pass));
-});
-
-router.post('/logout', function (req, res) {
-  defaultSession(req.session);
-  res.send("ok");
-});
-
-router.get('/forum-template', function (req, res) {
-  res.render('forum', { title: 'Forum' });
-});
-
-router.get('/shop-template', function (req, res) {
-  res.render('shop', { title: 'Shop' });
-});
-
-router.get('/community-template', function (req, res) {
-  res.render('community', { title: 'Community' });
 });
 
 module.exports = router;
