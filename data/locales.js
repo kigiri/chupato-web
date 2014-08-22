@@ -2,10 +2,11 @@ var data = module.exports = {
   "banner": {
     "account": [ "", "Account", "Compte" ],
     "welcome": [ "", "Welcome", "Salut" ],
-    "confirm": [ "", "Confirm", "Vérif." ], 
-    "profil": [ "", "My Profile", "Mon Profil" ], 
-    "tickets": [ "", "GM Tickets", "Requêtes MJ" ], 
-    "inbox": [ "", "Private Messages", "Messages Privées" ], 
+    "confirm": [ "", "Confirm", "Vérif." ],
+    "profil": [ "", "My Profile", "Mon Profil" ],
+    "tickets": [ "", "GM Tickets", "Requêtes MJ" ],
+    "inbox": [ "", "Private Messages", "Messages Privées" ],
+    "register": [ "", "Register", "Inscription" ],
     "next": [ "", "Next", "Suite" ],
     "back": [ "", "Back", "Retour" ],
     "submit": [ "", "Submit", "Valider" ],
@@ -38,7 +39,7 @@ var data = module.exports = {
     ],
     "titles": [
        [ "" ],
-       [ "Connection", "Login", "Inscription", "Confirm" ],
+       [ "Connection", "Login", "Register", "Confirm" ],
        [ "Connexion", "Login", "Inscription", "Confirmation" ]
     ]
   },

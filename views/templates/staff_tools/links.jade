@@ -1,0 +1,35 @@
+#staff-links.light-block
+  .small.left.light(ng-init='locales = #{JSON.stringify(locales)}; showAll = false')
+    .text
+      form#addlink(novalidate ng-submit="submitLink()" ng-init="newlink = {}")
+        fieldset
+          legend Add a Link :
+          input#link-common(type="checkbox" ng-model='showAll')
+          label.inverted(for="link-common") Nom français différent ?
+          .spacer
+            label(for="name") Name
+            input#name(type="text" placeholder="Name..." name="name" required ng-model="newlink.name")
+          .spacer
+            label(for="adr")  Adress
+            input#adr(type="text" placeholder="http://google.com" name="adr" required ng-model="newlink.adr")
+          .spacer
+            label(for="name2") Name-fr
+            input#name2(type="text" placeholder="Nom..." name="name2" ng-disabled="!showAll" ng-model="newlink.name2")
+          .spacer
+            label(for="adr2") adress-fr
+            input#adr2(type="text" placeholder="http://google.fr" name="adr2" ng-disabled="!showAll" ng-model="newlink.adr2")
+          .spacer
+            label(for="icon") Icon
+            input#icon(type="text" placeholder="without 'fa-' part" name="icon" required ng-model="newlink.icon")
+            a.form-link(href="http://fortawesome.github.io/Font-Awesome/icons/" tabindex="-1")  Find icon names here...
+          input(type="submit" value="Submit")
+  .right.large.mid
+    ul(ng-repeat="loc in locales", ng-class-even="'even'")
+      h2 {{loc.name}}
+      li.elem(ng-repeat="link in loc.links | orderBy:'adr'")
+        i.big.fa(class="{{ 'fa-' + link.icon }}")
+        span.link-name {{ link.name }}
+        br
+        span.link-adr {{ link.adr }}
+    .spacer
+  .spacer

@@ -1,9 +1,228 @@
 #staff {
-  .even {
-    background-color: @bg-light;
+
+  fieldset.addapted {
+    min-height: 0;
   }
+  #query-builder {
+    min-height: 92px;
+    width: 24%;
+    float: left;
+    .filter {
+      margin: -2px;
+    }
+    .pannel {
+      float: left;
+      margin-right: 8px;
+      margin-bottom: 5px;
+      width: 100%;
+      input {
+        width: 100%;
+        border: none;
+        background: none;
+        box-shadow: none;
+      }
+    }
+    .label {
+      .tab1 { padding-left: 15px;}
+      .keyword { color: #D64864; }
+      padding: 5px;
+    }
+    .menu {
+      border: solid 1px #434f4e;
+      background-color: @bg-light;
+      width: 92px;
+      overflow: hidden;
+      position: relative;
+      z-index: 999;
+      box-shadow: 0 5px 19px -2px rgba(0, 0, 0, 0.93) !important;
+      margin-top: 3px;
+      border-top: 0;
+    }
+    .list {
+      border-top: solid 1px #434f4e;
+      max-height: 170px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      width: 100%;
+      padding-left:0px;
+      padding-right:25px;
+      margin-top: -1px;
+    }
+    .elem {
+      border-top: solid 1px #434f4e;
+      padding: 2px 5px;
+      display: block;
+      width: 270px;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      border-color: #434f4e;
+      b { color: @highlight; }
+      &:hover {
+        box-shadow: 0 0 2px #111212 inset;
+        background-color: #2a2c2b !important;
+        text-shadow: 0 0 3px #000000;
+      }
+    }
+  }
+  #sql-console {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    border: 1px solid #4e5d5b;
+    border-spacing: 0;
+    border-collapse: collapse;
+    text-shadow: none;
+    width: 100%;
+    .wait {
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+      border: 1px solid #4e5d5b;
+      background-color: @bg-mid;
+    }
+    .count {
+      background-color: @bg-dark;
+      color: @bg-light;
+      text-align: right;
+      width: 1px;
+      font-family: monospace;
+      padding: 0 4px;
+    }
+    .even {
+      background-color: darken(@bg-mid, 2%);
+      .odd { background-color: darken(@bg-mid, 5%); }
+    }
+    .odd { background-color: darken(@bg-mid, 3%); }
+    tr {
+      background-color: @bg-mid;
+      &.labels { color: @detail; }
+    }
+    td {
+      padding: 5px;
+      overflow: hidden;
+      &:hover {
+        overflow: visible;
+        //#key { width: auto; }
+      }
+    }
+    #key { width: 1px;}
+  }
+  .CodeMirror {
+    margin-left: 2px;
+    margin-bottom: 5px;
+    width: 75%;
+    float: right;
+    height: 92px;
+  }
+  > div {
+    margin-bottom: 15px;
+    padding: 15px;
+  }
+  #staff-error {
+    text-align: center;
+    line-height: 280px;
+    min-height: 300px;
+  }
+  #staff-links {
+    ul { width: 33%; }
+    padding: 3px;
+    height: 300px;
+    .right {
+      height: 300px;
+      overflow-y: scroll;
+    }
+  }
+  fieldset {
+    border: 1px solid lighten(@bg-light, 10%);
+    background-color: rgba(130, 0, 94, 0.11);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.23);
+    min-height: 236px;
+  }
+  label {
+    width: 20%;
+    display: inline-block;
+    text-align: right;
+    line-height: 24px;
+    &.inverted {
+      width: 77%;
+      text-align: left;
+    }
+  }
+  input[type=text] {
+    display: inline-block;
+    width: 77%;
+  }
+  input[type=checkbox] {
+    margin-left: 17%;
+    margin-right: 1%;
+  }
+  input[type=submit] {
+    clear: right;
+    cursor: pointer;
+    width: 15%;
+    float: right;
+  }
+  textarea {
+    width: calc(~'100% - 9px');
+    margin-left: 2px;
+    resize: vertical;
+  }
+  input, button, select, option, textarea, .label {
+    background-color: @bg-dark;
+    border: 1px solid;
+    border-color: lighten(@bg-light, 10%);
+    color: @highlight;
+    padding: 2px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    &:disabled { background-color: @bg-mid; }
+    &:disabled:hover { border-color: lighten(@bg-light, 10%); }
+    &:hover, &:focus {
+      border-color: @highlight;
+      outline: 0;
+    }
+  }
+  ::-webkit-input-placeholder { color: lighten(@bg-light, 10%); }
+  :-moz-placeholder {           color: lighten(@bg-light, 10%); }
+  ::-moz-placeholder {          color: lighten(@bg-light, 10%); }
+  :-ms-input-placeholder {      color: lighten(@bg-light, 10%); }
+  .blank {
+    width: 100%;
+    height: 200px;
+    text-align: center;
+    .fa {
+      line-height: 200px;
+      font-size: 70px;
+    }
+  }
+  #promote {
+    #rbac-form {
+      width: 67%;
+      float: right;
+    }
+    #promote-form {
+      float: left;
+      width: 33%;
+      #promote-reset {
+        cursor: pointer;
+        &:hover { color: @highlight; }
+      }
+      select { width: 48%; }
+      .checkboxes {
+        float: left;
+        width: 52%;
+      }
+      #promote-error { float: right; }
+      fieldset { min-height: 235px; }
+    }
+    .checkbox {
+      clear: both;
+      label, input { float: left; }
+    }
+    #account-id {
+      width: 37px;
+      text-align: right;
+      padding: 0 2px;
+      margin-right: 4px;
+    }
+  }
+  .even { background-color: @bg-light; }
   ul {
-    width: 33%;
     margin: 0;
     padding: 0;
     list-style-type: none;
@@ -15,38 +234,32 @@
       margin-top: 5px;
     }
     li {
-      div {
-        margin-left:45px;
-        text-overflow:ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-      span {
-        display: block;
-        //float: left;
-      }
-      .link-name {
-        font-weight: bold;
-      }
+      text-overflow:ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      .link-name { font-weight: bold; }
       .link-adr {
+        padding-left:13px;
         color: @detail;
       }
     } 
     .elem {
       i {
-        font-size: 26px;
-        width: 26px;
-        line-height: 26px;
-        position: absolute;
+        font-size: 13px;
+        width: 13px;
+        line-height: 13px;
       }
-      b {
-        color: @highlight;
+      b { color: @highlight; }
+    }
+  }
+  form {
+    a {
+      cursor: pointer;
+      &.form-link {
+        float: left;
+        margin-left: 22%;
       }
     }
   }
-  .spacer {
-    input {
-      float: right;
-    }
-  }
+  .spacer input { float: right; }
 }

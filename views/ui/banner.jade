@@ -1,8 +1,8 @@
-div(id="logo" class="fadein2")
-  div(id="logo-fg" class="logo-img")
-  div(id="logo-bg" class="logo-img fadein")
-div(id="top-menu")
-  div(class="item" id="realmlist")
+#logo.fadein2
+  #logo-fg.logo-img
+  #logo-bg.rotate.logo-img
+#top-menu
+  #realmlist.item
     div(class="menu-wrapper")
       div(class="title") Realm List
         span(class="arrow") ▶
@@ -44,12 +44,12 @@ div(id="top-menu")
           div(class="spacer")
         div(ng-switch="state")
           div(ng-switch-when="on")
-            button(ng-click="authClick('logout')" class="smooth-hover") -> #{banner.profil[loc.i]}
-            button(ng-click="authClick('logout')" class="smooth-hover") -> #{banner.inbox[loc.i]}
-            button(ng-click="authClick('logout')" class="smooth-hover") -> #{banner.tickets[loc.i]}
+            button(ng-click="authClick('profil')" class="smooth-hover") -> #{banner.profil[loc.i]}
+            button(ng-click="authClick('inbox')" class="smooth-hover") -> #{banner.inbox[loc.i]}
+            button(ng-click="authClick('tickets')" class="smooth-hover") -> #{banner.tickets[loc.i]}
             button(ng-click="authClick('logout')" class="smooth-hover") -> #{banner.logout[loc.i]}
           div(ng-switch-default ng-if="active === 0")
-            button(ng-click="authClick('inscription')" class="smooth-hover" id="auth-origin") -> Inscription
+            button(ng-click="authClick('inscription')" class="smooth-hover" id="auth-origin") ->  #{banner.register[loc.i]}
             button(ng-click="authClick('login')" class="smooth-hover") -> #{banner.login[loc.i]}
   div(class="item" id="lang")
     div(class="menu-wrapper")

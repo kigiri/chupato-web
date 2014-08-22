@@ -1,0 +1,16 @@
+#profile(ng-init="profile = #{JSON.stringify(profile)};")
+  #
+  - if (role) {
+  -   if (role & roles["VIP"]) {
+  -   }
+  -   if (role & roles["GM"]) {
+  -   }
+  -   if (role & (roles["CM"] | roles["WEB"])) {
+  -   }
+  -   if (role & roles["SQL"]) {
+  -   }
+  -   if (role & roles["C++"]) {
+  -   }
+  -   if (role & roles["ADMIN"]) {
+  -   }
+  - }

@@ -1,0 +1,12 @@
+.chat-box
+  #chat-content.chat-content(ng-show="chatMessages.length")
+    ol
+      li(ng-repeat="msg in chatMessages | orderBy:'$index':true | limitTo: 150")
+        | [
+        span(ng-class="msg.class ? 'name-' + msg.class : 'name-default'") {{msg.name}}
+        | ]: 
+        span(ng-class="msg.class ? 'msg-' + msg.class : 'msg-default'") {{msg.content}}
+  .chat-input(ng-init="showSay = false")
+    .say(ng-show="showSay") Say :
+    textarea#chat-input(chat-input ng-blur="showSay = false" ng-focus="showSay = true" spellcheck="false")
+

@@ -1,3 +1,25 @@
+var socket = io();
+var messages = {};
+var unreadMsg = 0;
+var chatBoxInput = document.getElementById('chat-input');
+
+document.onkeyup = function (event) {
+  if (!event) return;
+  if (event.keyCode == 13) {
+    switch (document.activeElement.tagName) {
+      case "INPUT":
+      case "A":
+      case "BUTTON":
+      case "TEXTAREA": break;
+      default:
+        chatBoxInput.focus();
+        break;
+    }
+  }
+  else if (event.keyCode === 27) {
+    document.activeElement.blur();
+  }
+}
 
 var app = angular
   .module('app', [
@@ -58,9 +80,36 @@ app.factory('chupaData', function($http) {
 app.controller('menuCtrl', function($scope, $timeout, $http, chupaData) {
 
   function init() {
+    var chatBox = document.getElementById('chat-content');
+    function scrollChat() {$scope.$apply(); chatBox.scrollTop = chatBox.scrollHeight;}
+    $scope.scrollChat = scrollChat;
+    $scope.chatMessages = [];
     $scope.sel = chupaData.getSelectors();
     $scope.searchPosition = 0;
     $timeout(countDown, 500);
+    socket.on('newLogs', function (msg) {
+      document.title = document.title === "Chupato" ? "Chupato !" : "Chupato" ;
+      $scope.chatMessages.push({"name": msg.logType + "Log", "content":JSON.stringify(msg)});
+      scrollChat();
+    });
+    socket.on('leaved', function (msg) {
+      $scope.chatMessages.push({'name':'---', 'content':msg.username + " has leaved the chat, " + msg.total + " users online."});
+      scrollChat();
+    });
+    socket.on('joined', function (data) {
+      document.title = document.title === "Chupato" ? "Chupato !" : "Chupato" ;
+      $scope.chatMessages.push({'name':'+++', 'content':data.username + " has join the chat, " + data.total + " users online."});
+      scrollChat();
+    });
+    socket.on('broadcastMsg', function (msg) {
+      document.title = document.title === "Chupato" ? "Chupato !" : "Chupato" ;
+      $scope.chatMessages.push(msg);
+      scrollChat();
+    });
+    $timeout(function () {
+      if ($scope.username)
+        socket.emit('join', $scope.username);
+    }, 1000);
   }
 
   function moveInForm(value, selector) {
@@ -132,60 +181,90 @@ app.controller('menuCtrl', function($scope, $timeout, $http, chupaData) {
       case 'prev':
         if ($scope.active === 3) { moveInForm(2, $scope.sel[0]); }
         else { moveInForm(0); } break;
-      case 'logout': $http.post('/logout'); $scope.state = "off"; break;
+      case 'logout':
+        $http.post('/users/logout');
+        $scope.state = "off";
+        socket.emit('logout');
+        console.log("deco !");
+        break;
       case 'submit':
         if (!hasErrors()) {
           if ($scope.active === 1) {
-            $http
-              .post('/login', { account: $scope.auth.account, pass: $scope.auth.pass })
-              .then(function(result) {
-                var ret = result.data;
-                $scope.tryLeft--;
-                if ($scope.tryLeft < 1) { startCountDown(59, 1000); }
-                if (!isNaN(ret)) {
-                  var sec = Math.floor(ret / 1000);
-                  var left = (ret - (sec * 1000)) - 50;
-                  if (left > 0) { left = 1; }
-                  startCountDown(sec, left);
+            $http.post('/users/login', { account: $scope.auth.account, pass: $scope.auth.pass })
+            .then(function (result) {
+              var ret = result.data;
+              $scope.tryLeft--;
+              if ($scope.tryLeft < 1) { startCountDown(59, 1000); }
+              if (!isNaN(ret)) {
+                var sec = Math.floor(ret / 1000);
+                var left = (ret - (sec * 1000)) - 50;
+                if (left > 0) { left = 1; }
+                startCountDown(sec, left);
+              }
+              else {
+                switch (ret) {
+                  case "ERR_FOUND": sendError(2, $scope.sel[0]); break;
+                  case "ERR_MATCH": sendError(6, $scope.sel[1]); break;
+                  default:
+                    $scope.tryLeft = 3;
+                    $scope.username = ret;
+                    $scope.state = "on";
+                    $scope.active = 0;
+                    socket.emit('join', ret);
+                  break;
                 }
-                else {
-                  switch (ret) {
-                    case "ERR_FOUND": sendError(2, $scope.sel[0]); break;
-                    case "ERR_MATCH": sendError(6, $scope.sel[1]); break;
-                    default:
-                      $scope.tryLeft = 3;
-                      $scope.username = ret;
-                      $scope.state = "on";
-                      $scope.active = 0;
-                    break;
-                  }
-                }
-              });
+              }
+            });
           } else {
-            $http
-              .post('/register', { "account": $scope.auth.account, "pass": $scope.auth.pass, "mail": $scope.auth.email })
-              .then(function(result) {
-                 switch (result.data) {
-                   case "ERR_ALREADY_EXISTS": sendError(2, $scope.sel[0]); break; // TODO, name this error properly
-                   case "ERR_TOO_SHORT":      sendError(4, $scope.sel[0]); break;
-                   case "ERR_TOO_LONG":       sendError(3, $scope.sel[0]); break;
-                   case "ERR_INVALID":        sendError(2, $scope.sel[0]); break;
-                   case "ERR_MAIL_FORMAT":    sendError(1, $scope.sel[3]); break;
-                   default:
-                     $scope.tryLeft = 3;
-                     $scope.username = result.data;
-                     $scope.state = "on";
-                     $scope.active = 0;
-                   break;
-                 }
-              });
+            $http.post('/users/register', { "account": $scope.auth.account, "pass": $scope.auth.pass, "mail": $scope.auth.email })
+            .then(function(result) {
+              var ret = result.data;
+               switch (ret) {
+                 case "ERR_ALREADY_EXISTS": sendError(2, $scope.sel[0]); break; // TODO, name this error properly
+                 case "ERR_TOO_SHORT":      sendError(4, $scope.sel[0]); break;
+                 case "ERR_TOO_LONG":       sendError(3, $scope.sel[0]); break;
+                 case "ERR_INVALID":        sendError(2, $scope.sel[0]); break;
+                 case "ERR_MAIL_FORMAT":    sendError(1, $scope.sel[3]); break;
+                 default:
+                  $scope.tryLeft = 3;
+                  $scope.username = ret;
+                  $scope.state = "on";
+                  $scope.active = 0;
+                  socket.emit('join', ret);
+                  break;
+               }
+            });
           }
         } break;
       default: break;
     }
   };
-  $scope.setLang = function(lang) { window.location = window.location.origin + "/" + lang + "/" + window.location.hash; };
+  $scope.setLang = function(lang) {
+    $http.post('/userdata', { "key": 'lang', "value": lang, "sessionKey": "lang" })
+    .then(function (result) {
+      if (result.data !== "OK") alert(result.data);
+      location.reload();
+    });
+    //console.log(window.location.origin + "/" + window.location.hash);
+    //window.location = window.location.origin + "/" + lang + "/" + window.location.hash;
+  };
 
+  $scope.chatting = function($event) {
+    switch ($event.keyCode) {
+      case 13: // Enter
+        if ($event.shiftKey) {
+
+        }
+        else {
+          $scope.chatInput = '';
+          $event.preventDefault();
+        }
+        break;
+      case 27: // Esc
+        break;
+      default: break;
+    }
+  }
   $scope.onKeyPress = function($event) {
     var k = $event.keyCode;
     switch (k) {
@@ -200,19 +279,19 @@ app.controller('menuCtrl', function($scope, $timeout, $http, chupaData) {
         }
         break;
       case 13: // Enter
-        if (angular.isUndefined($scope.searchInput))
+        if (angular.isUndefined($scope.searchInput) && $scope.searchInput) {
           break;
+        }
         $event.preventDefault();
         var elem = angular.element(document.querySelector('#result-' + $scope.searchPosition));
         if (!elem.length)
           elem = angular.element(document.querySelector('#result-0'));
         var href = elem[0].href;
-        //if (href.match(/^http\:\/\/chupato\.com\/\#/i) || elem.hasClass('alert')) {
-          $scope.searchInput = '';
+        $scope.searchInput = '';
+        if (href.match(/^http\:\/\/chupato\.com\/\#/i))
           window.location.href = href;
-        //}
-        //else
-        //  elem.addClass('alert');
+        else
+          window.open(href,'_blank');
         break;
       case 40: // Down
         $event.preventDefault();
@@ -240,21 +319,34 @@ app.controller('menuCtrl', function($scope, $timeout, $http, chupaData) {
         $scope.searchPosition = 0;
     }
   }
+
   init();
 })
 
+app.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start;
+        return input.slice(start);
+    }
+});
+
 app.filter('fuzzyFilter', function () {
   return function (items, pattern) {
-    if (angular.isUndefined(items) || angular.isUndefined(pattern))
-      return items;
-    var patLen = pattern.length;
-    if (patLen < 1)
-      return items;
-
     var tempItems = [];
+    if (angular.isUndefined(pattern) || !pattern) {
+      for (var key in items) {
+        if (items[key].hasOwnProperty('name'))
+          items[key].html = items[key].name;
+        items[key].score = 0;
+        tempItems.push(items[key]);
+      }
+      return tempItems;
+    }
+    var patLen = pattern.length;
+
     for (var k = items.length - 1; k >= 0; k--) {
       var string = items[k].name;
-      if (items[k].sorted == false) {
+      if (items[k].hasOwnProperty('sorted') && items[k].sorted == false) {
         items[k].html = '<span class="bold">' + pattern + '</span> <span class="italic">' + string + '...</span>';
         items[k].score = 0;
         tempItems.push(items[k]);
@@ -279,8 +371,14 @@ app.filter('fuzzyFilter', function () {
             currScore++;
           if (!idx)
             match.currScore += 2;
-          else if (string[idx - 1] == ' ')
-            match.currScore++;
+          switch (string[idx - 1]) {
+            case ' ':
+            case '_':
+            case '-':
+              match.currScore++;
+              break;
+            default: break;
+          }
           match.score = currScore;
           match.idx = idx;
           result[idx] = match.html;
@@ -297,3 +395,23 @@ app.filter('fuzzyFilter', function () {
     return tempItems;
   }
 });
+
+app.directive('chatInput', [function() {
+  return function($scope, element, attr) {
+    function keyEvent(event) {
+      if (event.keyCode === 13) {
+        var content = element[0].value;
+        element[0].value = '';
+        if (!content || (content.length < 2)) return;
+        var username = $scope.username ? $scope.username : "Guest";
+        var msg = {'name':username, 'content':content};
+        socket.emit('sendMsg', msg);
+        $scope.chatMessages.push(msg);
+        $scope.scrollChat();
+        event.preventDefault();
+      }
+    }
+    element.css({ display: 'block' });
+    element.bind('keypress keydown keyup', keyEvent);
+  };
+}]);

@@ -1,12 +1,14 @@
-@highlight: #2ed291; // Turquoise
+@highlight: #2ED291; // Turquoise
+@highlight-sh: #67a085; // Dark Turquoise
 @bg-light:  #374140;
-@bg-dark:   #1e1e20;
-@bg-mid:    #2a2c2b;
-@normal:    #d9cb9e; // Creme
-@grey:      #5c6362; // Grey
-@detail:    #c49e02; // Yellow
-@hover:     #ff8b00; // Orange
-@alert:     #dd721f; // Red
+@bg-dark:   #1E1E20;
+@bg-mid:    #2A2C2B;
+@bg-invert: #AEA37B;
+@normal:    #D9CB9E; // Creme
+@grey:      #5C6362; // Grey
+@detail:    #C49E02; // Yellow
+@hover:     #FF8B00; // Orange
+@alert:     #DD721F; // Red
 @small:     450px;
 @large:     calc(~'100% - 450px');
 @mid:       50%;
@@ -18,13 +20,15 @@
 @import 'home.less';
 @import 'help.less';
 @import 'staff.less';
+@import 'shop.less';
+@import 'chat.less';
 
 @font-face {
   font-family: 'FontAwesome';
   src: url('font/fontawesome-webfont.eot?v=@{fa-version}');
-  src: url('font/fontawesome-webfont.eot?#iefix&v=@{fa-version}') format('embedded-opentype'),
-       url('font/fontawesome-webfont.woff?v=@{fa-version}') format('woff'),
-       url('font/fontawesome-webfont.ttf?v=@{fa-version}') format('truetype'),
+  src: url('font/fontawesome-webfont.eot?#iefix&v=@{fa-version}')             format('embedded-opentype'),
+       url('font/fontawesome-webfont.woff?v=@{fa-version}')                   format('woff'),
+       url('font/fontawesome-webfont.ttf?v=@{fa-version}')                    format('truetype'),
        url('font/fontawesome-webfont.svg?v=@{fa-version}#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal;
@@ -36,24 +40,52 @@
 .highlight-block {
   background-color: @highlight;
   border-color: lighten(@highlight, 3%);
+  &.hover:hover, &.ui:hover {
+    background-color: lighten(@highlight, 1.5%);
+    border-color: lighten(@highlight, 5%);
+  }
 }
 .dark-block {
   background-color: @bg-dark;
   border-color: lighten(@bg-dark, 3%);
+  &.hover:hover, &.ui:hover {
+    background-color: lighten(@bg-dark, 1.5%);
+    border-color: lighten(@bg-dark, 5%);
+  }
 }
 
 .mid-block {
   background-color: @bg-mid;
   border-color: lighten(@bg-mid, 3%);
+  &.hover:hover, &.ui:hover {
+    background-color: lighten(@bg-mid, 1.5%);
+    border-color: lighten(@bg-mid, 5%);
+  }
 }
 
 .light-block {
   background-color: @bg-light;
   border-color: lighten(@bg-light, 3%);
+  &.hover:hover, &.ui:hover {
+    background-color: lighten(@bg-light, 1.5%);
+    border-color: lighten(@bg-light, 5%);
+  }
 }
 
 .highlight {
   background-color: @highlight;
+}
+
+.ui {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  &:hover { color: @highlight; 
+    text-shadow: @highlight-sh 0 0 5px;}
 }
 
 .dark {
@@ -101,12 +133,24 @@
        -o-transition: all 200ms;
           transition: all 200ms;
   &:hover {
-    outline: none; 
+    outline: none;
     -webkit-transition: all 200ms;
        -moz-transition: all 200ms;
          -o-transition: all 200ms;
             transition: all 200ms;
   }
+}
+.rotate {
+  -webkit-animation: rotation 20s infinite linear;
+     -moz-animation: rotation 20s infinite linear;
+       -o-animation: rotation 20s infinite linear;
+          animation: rotation 20s infinite linear;
+}
+.rotate-fast {
+  -webkit-animation: rotation 1s infinite linear;
+     -moz-animation: rotation 1s infinite linear;
+       -o-animation: rotation 1s infinite linear;
+          animation: rotation 1s infinite linear;
 }
 
 button {
@@ -136,10 +180,10 @@ body {
 a {
   -webkit-backface-visibility: hidden;
   color: @detail;
-  outline: none; 
+  outline: none;
   text-decoration: none;
   &:hover {
-    outline: none; 
+    outline: none;
     color: @hover;
   }
   &:focus {
@@ -175,6 +219,8 @@ h1 {
   max-width: 1375px;
   margin: 0 auto;
 }
+
+.noborder { border: none!important; }
 
 .big {
   line-height: 65px;
@@ -223,12 +269,46 @@ h1 {
 }
 .showed {
   display: block!important;
-  visibility:visible;
+  visibility: visible;
 }
 
 #content {
   //background-color: @bg-mid;
   //padding: 15px;
+}
+
+#gamefeed {
+  background-color: @bg-invert;
+  border: solid 1px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+  border-color: @normal;
+  width: 100%;
+  min-height: 45px;
+  max-height: 300px;
+  overflow: auto;
+  display: hidden;
+  margin-bottom: 2px;
+}
+
+#gf-btn {
+  text-align: center;
+  height: 18px;
+  width: 100%;
+  margin-bottom: 15px;
+  color: @grey;
+  &:hover {
+    color: @highlight;
+    text-shadow: @highlight-sh 0 0 5px;
+    i.fa {color: @highlight;
+    text-shadow: @highlight-sh 0 0 5px;}
+  }
+  i.fa {
+    position: relative;
+    margin: 0 5px;
+    color: @grey;
+    &.fa-sort-down { top: -2px; }
+    &.fa-sort-up   { top:  3px; }
+  }
 }
 
 #social {

@@ -2,16 +2,24 @@ doctype html
 html(ng-app="app")
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet' href='/stylesheets/style.css')
   body
-    div(id="wrapper", ng-init='loc = #{JSON.stringify(loc)}; test = #{JSON.stringify(banner)}')
+    //- ; account = #{JSON.stringify(account)};
+    #wrapper(ng-init='loc = #{JSON.stringify(loc)}')
       div(ng-controller="menuCtrl")
-        div(id="banner")
+        #banner
           include ui/banner
-        div(id="menu")
+        #menu
           include ui/menu
-      div(id="content" class="fadein2")
+        #gamefeed(ng-class="gfShow ? 'showed':'hidden'")
+        #gf-btn.dark-block.ui(ng-click="gfShow = !gfShow")
+          i.fa(ng-class="gfShow ? 'fa-sort-up':'fa-sort-down'")
+          | No new notifications in the feed. Click to deploy
+          i.fa(ng-class="gfShow ? 'fa-sort-up':'fa-sort-down'")
+        #chat
+          include ui/chat
+      #content.fadein2
         div(ui-view)
-      div(id="footer")
+      #footer
         include ui/footer
     include scripts

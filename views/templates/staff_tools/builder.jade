@@ -1,0 +1,34 @@
+.pannel
+  .label
+    span.keyword SELECT
+
+.pannel(ng-if="selected.db && selected.db.fields.length")
+  .label(ng-click="toggleMenu('field')")
+    input.filter(type="text" ng-model="fieldFilter" placeholder="{{ selected.db.pickedFields ? '+' : '*' }}")
+  .menu(ng-show="show.field")
+    .list.noselect
+      .elem.noselect(ng-repeat="field in selected.db.fields | fuzzyFilter:fieldFilter | orderBy:'score':true" ng-click="moveElem(field.name, true)" ng-bind-html="field.html")
+
+.pannel(ng-repeat="elem in selected.db.pickedFields")
+  .label(ng-click="moveElem(elem.name, false)")
+    span.tab1 {{ elem.name }}
+
+.pannel
+  .label(ng-click="toggleMenu('db')")
+    input.filter(type="text" ng-model="dbFilter" placeholder="FROM")
+  .menu(ng-show="show.db")
+    .list
+      .elem.noselect(ng-repeat="table in dbStruct | fuzzyFilter:dbFilter | orderBy:'score':true" ng-click="setSelect(table)" ng-bind-html="table.html")
+.pannel(ng-if="selected.db")
+  .label(ng-click="setSelect(false)")
+    span.tab1 {{ selected.db.name }}
+.pannel
+  .label
+    span.keyword WHERE
+
+.pannel(ng-if="selected.db && selected.db.where.length")
+  .label(ng-click="toggleMenu('where')")
+    input.filter(type="text" ng-model="whereFilter" placeholder="{{ selected.db.pickedFields ? '+' : '*' }}")
+  .menu(ng-show="show.where")
+    .list.noselect
+      .elem.noselect(ng-repeat="where in selected.db.where | fuzzyFilter:whereFilter | orderBy:'score':true" ng-click="updateWhere(where.name, true)" ng-bind-html="where.html")

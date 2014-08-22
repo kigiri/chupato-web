@@ -1,0 +1,29 @@
+#staff-sql.light-block
+  form#execute-sql(novalidate ng-submit="submitSQL()")
+    fieldset.addapted
+      legend Execute Raw SQL
+      #query-builder(ng-init="dbStruct = #{JSON.stringify(worldDbStruct)}")
+        include builder
+        - if (role === -1) {
+            select#realms(name="realm" ng-model="SQLrealm" required)
+              option(value="") -- Realm --
+              option(ng-repeat="realm in staff.realms" value="{{realm.id}}" ng-if="realm.id" ng-selected="$index === 0") {{realm.name}}
+        - }
+        .spacer
+      textarea.CodeMirror(ng-model="rawSQL")
+      input(type="submit" value="Execute" ng-disabled="waitingSQL")
+      .output.fadein2(ng-show="consoleSQL")
+        label(for="sql-console") SQL Console Output :
+        .blank.dark-block.fadein2(ng-show="waitingSQL")
+          i.fa.fa-refresh.rotate-fast
+        table#sql-console.fadein2(ng-show="!waitingSQL")
+          tbody
+            tr.labels.even
+              td.count
+              td(ng-repeat="(key, value) in consoleSQL[0]" ng-class-even="'odd'")
+                #key
+                  span {{key}}
+            tr(ng-repeat="elem in consoleSQL | limitTo:25" ng-class-even="'even'")
+              td.count {{$index + 1}}
+              td(ng-repeat="(key, value) in elem" ng-class-even="'odd'") {{value}}
+  

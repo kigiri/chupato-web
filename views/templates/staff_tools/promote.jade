@@ -1,0 +1,45 @@
+#promote.light-block
+  form#promote-form(novalidate ng-submit="submitPromote()")
+    fieldset(ng-show="waiting")
+      legend Promote an account :
+      .fadein2
+        .blank.noselect
+          i.fa.fa-refresh.rotate-fast
+    fieldset(ng-show="!waiting")
+      legend Promote an account :
+      .fadein2
+        #promote-error {{postMessage}}
+        #promote-reset(ng-click="resetUser()")
+          input#account-id(type="text" placeholder="id" ng-model="promote.id" ng-disabled="!promote.id" required)
+          | {{accountSelected}}
+        #promote-account(ng-if="accountSelected == 'Select an account'").fadein2
+          input(type="text" placeholder="Search..." ng-model="searchAccount")
+          #account-selector.noselect(ng-init="accounts = #{accounts}")
+            ul
+              li(ng-repeat="account in accounts | filter:searchAccount | limitTo:10")
+                a(ng-click="saveUser(account)") {{account.id}} - {{account.username}}
+        #promote-pt2.noselect(ng-if="accountSelected != 'Select an account' && postMessage != 'No user selected'")
+          .checkboxes
+            .checkbox(ng-repeat="(key, value) in roles")
+              input(type="checkbox" id="role-{{value}}" ng-checked="isChecked({{value}})")
+              label(for="role-{{value}}") {{key}}
+          select(name="gmlevel" ng-model="promote.gmlevel")
+            option(value="") -- GM Level --
+            option(value="0" ng-selected="promote.gmlevel === 0") 0 - Normal
+            option(value="1" ng-selected="promote.gmlevel === 1") 1 - Moderators
+            option(value="2" ng-selected="promote.gmlevel === 2") 2 - GM
+            option(value="3" ng-selected="promote.gmlevel === 3") 3 - Admin
+          select#realms(ng-init="promote.realm = #{staff.realm}" name="realm" ng-model="promote.realm" required)
+            - if (role === -1) {
+                option(ng-repeat="realm in staff.realms" value="{{realm.id}}") {{realm.name}}
+            - } else {
+                option(ng-repeat="realm in staff.realms" value="{{realm.id}}" ng-disabled="realm.id != #{staff.realm}" ng-if="realm.id") {{realm.name}}
+            - }
+          input(type="submit" value="Submit")
+  form#rbac-form(novalidate ng-submit="submitPromote()")
+    fieldset
+      legend Role Based Access Control :
+      .fadein2
+        .blank.noselect
+          i.fa.fa-refresh.rotate-fast
+  .spacer

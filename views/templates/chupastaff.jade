@@ -1,35 +1,25 @@
-div(id="staff")
-  div(class="small left light", ng-init='locales = #{JSON.stringify(locales)}')
-    div(class="text")
-      h2 Add a Link :
-      form(id="addlink", method="post", action="link")
-        input(type="checkbox", name="common", ng-model='showAll')
-        | Nom français différent ?
-        div(class="spacer")
-          label(for="name") Name:
-          input(type="text", placeholder="Name...", id="name", name="name")
-        div(class="spacer")
-          label(for="adr")  Adress :
-          input(type="text", placeholder="http://google.com", id="adr", name="adr")
-        div(class="spacer", ng-class="showAll ? 'showed' : 'hidden'")
-          label(for="name2") French Name:
-          input(type="text", placeholder="Nom...", id="name2", name="name2")
-        div(class="spacer", ng-class="showAll ? 'showed' : 'hidden'")
-          label(for="adr2") French adress :
-          input(type="text", placeholder="http://google.fr", id="adr2", name="adr2")
-        div(class="spacer")
-          label(for="icon") Icon: 
-          a(href="http://fortawesome.github.io/Font-Awesome/icons/")  get names ref here...
-          input(type="text", placeholder="without 'fa-' part", id="icon", name="icon")
-        input(type="submit", value="Add Link")
-  div(class="right large mid")
-    ul(ng-repeat="loc in locales", ng-class-even="'even'")
-      h2 {{loc.name}}
-      li(class="elem", ng-repeat="link in loc.links | orderBy:'adr' ")
-        i(class="big fa {{ 'fa-' + link.icon }}")
-        div
-          span(class="link-name") {{ link.name }}
-          span(class="link-adr") {{ link.adr }}
-    div(class="spacer")
-  div(class="spacer")
-div(ng-repeat="article in news")
+#staff(ng-init="staff = #{JSON.stringify(staff)}; roles = #{JSON.stringify(roles)};")
+  - if (!role) {
+      #staff-error.light-block
+        h1 You are not login or your account ins't autorized here.
+  - } else {
+  -   if (role & roles["VIP"]) {
+        include staff_tools/players
+  -   }
+  -   if (role & roles["GM"]) {
+        include staff_tools/tickets
+  -   }
+  -   if (role & (roles["CM"] | roles["WEB"])) {
+        include staff_tools/links
+        include staff_tools/content
+  -   }
+  -   if (role & roles["SQL"]) {
+        include staff_tools/sql
+  -   }
+  -   if (role & roles["C++"]) {
+        include staff_tools/recompile
+  -   }
+  -   if (role & roles["ADMIN"]) {
+        include staff_tools/promote
+  -   }
+  - }

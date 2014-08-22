@@ -13,6 +13,7 @@
       color: @highlight;
       text-shadow: 1px 2px #111;
       margin-bottom: 10px;
+      white-space: nowrap;
       .errors {
         color:@alert;
       }
@@ -118,6 +119,10 @@
           background-color: @bg-light;
           color: @normal;
           border: 1px solid @bg-dark;
+          &:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px lighten(@bg-light, 10%) inset;
+            -webkit-text-fill-color: lighten(@normal, 10%)!important;
+          }
           &:focus {
             border-color: @highlight;
             outline-color: transparent;
@@ -161,10 +166,6 @@
   #logo-bg {
     background-color: transparent;
     background-image: url('@{img}logo-bg.png');
-    -webkit-animation: rotation 20s infinite linear;
-       -moz-animation: rotation 20s infinite linear;
-         -o-animation: rotation 20s infinite linear;
-            animation: rotation 20s infinite linear;
   }
 
   #logo {

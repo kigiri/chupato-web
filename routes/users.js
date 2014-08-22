@@ -25,12 +25,12 @@ router.post('/register', function (req, res) {
   var mail = req.body.mail;
   var pass = req.body.pass;
   var username = req.body.account;
-  if (!mail || !pass || !username) { res.send("error"); }
-  else { res.send(db.getAuth().register(req.session, username.toUpperCase(), pass, mail)); }
+  if (!mail || !pass || !username) { res.end("error"); }
+  else { console.log("values OK..."); res.end(db.getAuth().register(req.session, username.toUpperCase(), pass, mail)); }
 });
 
 router.post('/logout', function (req, res) {
-  defaultSession(req.session);
+  cache.defaultSession(req.session);
   res.send("ok");
 });
 
