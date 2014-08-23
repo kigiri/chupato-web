@@ -1,16 +1,20 @@
-div(id="hot")
-  div(class="small left light")
-    div(class="text")
-      h1(id=title) Pourquoi Chupato ?
-      p
-        | Chupato est un projet qui a débuté en mars 2013 entre Aos, Spam et Thai. Trois twinks de longue date.
-        br
-        | Ce projet a pour but d’offrir à la communauté twink un serveur stable, mais également de faire découvrir - ou même redécouvrir - l’univers du twink.
-        br
-        | Après plusieurs créations de serveurs privés, Aos et Spam ont su apprendre de leurs erreurs.
-        | Ils ont pris en compte, pour le serveur Chupato, les attentes et les demandes des joueurs partageant la passion du twink 19,
-        | afin d'offrir le serveur le plus représentatif pour ces joueurs... pour vous !
-  div(class="img large mid")
-    img(src="/images/home/first_news.jpg", alt="Welcome to Chupato !")
-  div(class="spacer")
-div(ng-repeat="article in news")
+#hot
+  .mid-block
+    #trailer.light-block
+      iframe(width="702" height="395" src="//www.youtube.com/embed/ZqEzDom1dWs" frameborder="0" allowfullscreen)
+    h1.title Pourquoi Chupato ?
+    .text.light-block
+      | Chupato est un projet qui a débuté en mars 2013 entre Aos, Spam et Thai. Trois twinks de longue date.
+      br
+      | Ce projet a pour but d’offrir à la communauté twink un serveur stable, mais également de faire découvrir - ou même redécouvrir - l’univers du twink.
+      br
+      | Après plusieurs créations de serveurs privés, Aos et Spam ont su apprendre de leurs erreurs.
+      | Ils ont pris en compte, pour le serveur Chupato, les attentes et les demandes des joueurs partageant la passion du twink 19,
+      | afin d'offrir le serveur le plus représentatif pour ces joueurs... pour vous !
+    .spacer
+#news(ng-init="newsCount = 5")
+  .topic.mid-block(ng-repeat="topic in news | limitTo: newsCount")
+    .topic-title {{topic.title}}
+      span.topic-date {{topic.date}}
+    .topic-content {{topic.content}}
+  a.topic-more.ui(ng-click="newsCount = newsCount + 10") Show More...

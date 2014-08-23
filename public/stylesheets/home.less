@@ -1,10 +1,28 @@
 #content {
-  #hot {
-    img {
-      width: @large;
+  #trailer {
+    background: no-repeat center center;
+    background-size: 100% auto;
+    margin: 15px;
+    height: 395px;
+    width: 702px;
+    float: right;
+  }
+  @media screen and (max-width: 1060px) {
+    #trailer {
+      float: none;
+      margin: 15px auto;
     }
   }
+  img { margin: 15px; }
+  .title {
+    margin-bottom: 0;
+    margin-top: 30px;
+    margin-left: 15px;
+    overflow-x: auto;
+  }
   .text {
+    margin: 15px;
     padding: 15px;
+    overflow-x: auto;
   }
 }

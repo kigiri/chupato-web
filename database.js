@@ -3,9 +3,11 @@ var sha1 = require('sha1');
 var db_config = require('./config');
 var queries = require('./data/queries.js');
 var locales = [{ name:"common" }, { name:"en" }, { name:"fr" }];
+var markdown = require('markdown').markdown;
 var connection;
 var accounts;
 var realmlist;
+var topics;
 var gameLogs = [];
 var lastGameLogId = 0;
 var worldDbStruct = [];
@@ -96,6 +98,20 @@ function initCacheAuthData(cache) {
   });
 }
 
+function initCacheTopics() {
+  connection.query(queries.SELECT.topics, function (err, docs) {
+    if (err) { console.log(getFnName(this), "->", err); }
+    else {
+      topics = docs;
+      for (var i = topics.length - 1; i >= 0; i--) {
+        var topic = topics[i];
+        topic.html = markdown.toHTML(topic.markdown);
+        topic.fr_html = topic.fr_markdown ? markdown.toHTML(topic.fr_markdown) : '';
+      }
+    }
+  });
+}
+
 function reloadCharacters(cache) {
   cache.prepareCharacters();
   connection.query(queries.SELECT.characters.online, function (err, docs) {
@@ -146,7 +162,7 @@ function updateUserdata(key, value, id) {
             flush.push(accounts[i].username);
             break;
           }
-        };
+        }
       }
     }
   );
@@ -165,7 +181,7 @@ function promoteInGame(data) {
             accounts[i].realm = this.values[2];
             break;
           }
-        };
+        }
       }
     }
   );
@@ -335,9 +351,10 @@ var cache = {
     return false;
   },
   updateUserdata: updateUserdata,
+  getRealmlist: function() { return realmlist; },
   getAccounts: function() { return accounts; },
   getAccount: getAccountFromUsername,
-  getRealmlist: function() { return realmlist; },
+  getTopics: function() { return topics; },
   getRoles: function() { return roles; },
   addLink: function(name, adr, icon, common) {
     if (common)
@@ -378,6 +395,7 @@ var cache = {
     for (var i = locales.length - 1; i >= 0; i--)
       initCacheLocales(this, i);
     initCacheAuthData(this);
+    initCacheTopics();
     lastGameLogId = 0,
     gameLogs = [],
     this.updateGameLogs(function () {});

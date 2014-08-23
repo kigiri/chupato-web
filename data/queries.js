@@ -7,6 +7,7 @@ var queries = module.exports = {
     "links": "SELECT name, adr, icon, sorted FROM website.links WHERE locale IN (0, ?)",
     "faq": "SELECT q AS question, a AS answer FROM website.faq WHERE locale IN (0, ?)",
     "realmlists": "SELECT id, name FROM chupato_auth.realmlist",
+    "topics":"SELECT * FROM website.topics",
     "characters": {
       "online":  "SELECT" + playerFields + "FROM chupato_characters.characters WHERE level > 9 AND online = 1 ORDER BY account",
       "active": "(SELECT" + playerFields + "FROM chupato_characters.characters WHERE totaltime > 3600 AND level > 9 AND deleteInfos_Account IS NULL ORDER BY logout_time DESC LIMIT ?) ORDER BY account",
