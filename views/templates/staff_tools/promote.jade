@@ -23,17 +23,22 @@
             .checkbox(ng-repeat="(key, value) in roles")
               input(type="checkbox" id="role-{{value}}" ng-checked="isChecked({{value}})")
               label(for="role-{{value}}") {{key}}
+          .characters
+            .character(ng-repeat="character in promote.characters")
+              span.name {{character.name}} 
+              span.level {{character.level}} - {{character.account}}
           select(name="gmlevel" ng-model="promote.gmlevel")
-            option(value="") -- GM Level --
+            option(value="") -- Select ingame GM level --
             option(value="0" ng-selected="promote.gmlevel === 0") 0 - Normal
             option(value="1" ng-selected="promote.gmlevel === 1") 1 - Moderators
             option(value="2" ng-selected="promote.gmlevel === 2") 2 - GM
             option(value="3" ng-selected="promote.gmlevel === 3") 3 - Admin
           select#realms(ng-init="promote.realm = #{staff.realm}" name="realm" ng-model="promote.realm" required)
             - if (role === -1) {
-                option(ng-repeat="realm in staff.realms" value="{{realm.id}}") {{realm.name}}
+                option(value='-1' selected) All Realms
+                option(ng-repeat="realm in staff.realms" value="{{realm.id}}") {{realm.id + " - " + realm.name}}
             - } else {
-                option(ng-repeat="realm in staff.realms" value="{{realm.id}}" ng-disabled="realm.id != #{staff.realm}" ng-if="realm.id") {{realm.name}}
+                option(ng-repeat="realm in staff.realms" value="{{realm.id}}" ng-disabled="realm.id != #{staff.realm}" ng-if="realm.id") {{realm.id + " - " + realm.name}}
             - }
           input(type="submit" value="Submit")
   form#rbac-form(novalidate ng-submit="submitPromote()")

@@ -98,14 +98,18 @@ function initCacheAuthData(cache) {
 
 function reloadCharacters(cache) {
   cache.prepareCharacters();
-  var characters = queries.SELECT.characters;
-  for (var i in characters) {
-    console.log(characters[i]);
-    connection.query(characters[i], function (err, docs) {
-      if (err) { console.log(getFnName(this), "->", err); }
-      else { cache.updateCharacters(docs); }
-    });
-  }
+  connection.query(queries.SELECT.characters.online, function (err, docs) {
+    if (err) { console.log(getFnName(this), "->", err); }
+    else {
+      var onlineUsers = docs;
+      cache.updateCharacters(docs);
+      if (docs.length > 1000) { return; }
+      connection.query(queries.SELECT.characters.active, (1000 - docs.length), function (err, docs) {
+        if (err) { console.log(getFnName(this), "->", err); }
+        else { cache.updateCharacters(docs); }
+      });
+    }
+  });
 }
 
 function getNewGameLogs(cb, lastGameLogId) {
@@ -194,6 +198,23 @@ function getAccountFromUsername(username) {
   for (var i = accounts.length - 1; i >= 0; i--) {
     if (accounts[i].username == username)
       return accounts[i];
+  }
+  return false;
+}
+function getAccountFromId(id, start) {
+  if (start) {
+    for (var itr = 0; itr < accounts.length; itr++) {
+      if (accounts[start].id === id)
+        return accounts[start];
+      start++;
+      if (start + 1 > accounts.length)
+        start = 0;
+    }
+  } else {
+    for (var i = 0; i < accounts.length; i++) {
+      if (accounts[i].id === id)
+        return accounts[i];
+    }
   }
   return false;
 }
@@ -294,24 +315,13 @@ var cache = {
     }
   },
   updateCharacters: function(characters) {
-    var accountIndex = 0;
-    var maxIndex = accounts.length;
-    for (var i = characters.length - 1; i >= 0; i--) {
+
+    var account = {id:0};
+    for (var i = 0; i < characters.length; i++) {
       var character = characters[i];
-      var id = character.id;
-      var maxIter = maxIndex + 1;
-      while (accounts[accountIndex].id !== id) {
-        if (--maxIter) break;
-        accountIndex++;
-        maxIter--;
-        if (accountIndex > maxIndex)
-          accountIndex = 0;
-      }
-      if (!maxIter) {
-        console.log("Account", id, "not found, skipping loading of character", character.name);
-        continue;
-      }
-      accountCharacters = accounts[accountIndex].characters.push(character);
+      account = getAccountFromId(character.account, account.id);
+      if (account === false) { return; }
+      account.characters.push(character);
     };
   },
   setRealmlist: function(data) { realmlist = data; },

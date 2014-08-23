@@ -71,11 +71,13 @@ angular
       .then(function (result) {
         var data = result.data;
         if (isNaN(data)) {
+          console.log(data.characters);
           $scope.promote.id = account.id;
           $scope.promote.username = account.username;
           $scope.promote.roles = data.roles;
           $scope.promote.gmlevel = data.gmlevel;
           $scope.promote.realm = data.realm;
+          $scope.promote.characters = data.characters;
           $scope.accountSelected = account.username + " [x]";
           $scope.postMessage = '';
         }

@@ -1,5 +1,5 @@
 #staff-links.light-block
-  .small.left.light(ng-init='locales = #{JSON.stringify(locales)}; showAll = false')
+  .small.left(ng-init='locales = #{JSON.stringify(locales)}; showAll = false')
     .text
       form#addlink(novalidate ng-submit="submitLink()" ng-init="newlink = {}")
         fieldset

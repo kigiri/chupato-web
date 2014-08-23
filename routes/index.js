@@ -114,7 +114,7 @@ router.post('/staff/user', function (req, res) {
     res.end('3');
   else {
     var a = cache.getAccount(req.body.username);
-    res.json({'gmlevel':a.gmlevel, 'realm':a.realm, 'roles':a.roles});
+    res.json({'gmlevel':a.gmlevel, 'realm':a.realm, 'roles':a.roles, 'characters':a.characters});
   }
 });
 
