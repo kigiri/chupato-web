@@ -18,6 +18,7 @@ var queries = module.exports = {
   },
   "INSERT": {
     "link": "INSERT INTO website.links (name, adr, icon, locale) VALUES (?, ?, ?, ?)",
+    "topic": "INSERT INTO website.topics (answerTo, postedBy, editedBy, deletedBy, category, editDate, postDate, title, markdown, fr_title, fr_markdown) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)",
     "account": "INSERT INTO chupato_auth.account (username, sha_pass_hash, email) VALUES (?, ?, ?)",
     "userdata": "INSERT INTO website.userdata (id) VALUES (?)",
   },
@@ -25,6 +26,7 @@ var queries = module.exports = {
     "accountAccess":'REPLACE INTO chupato_auth.account_access (id, gmlevel, RealmID) VALUES (?, ?, ?)',
   },
   "UPDATE": {
+    "topic": "UPDATE website.topics SET editedBy=?, deletedBy=?, editDate=NOW(), title=?, markdown=?, fr_title=?, fr_markdown=? WHERE id=?",
     "userdata": function (key) { return "UPDATE website.userdata SET " + key + "=? WHERE id=?" },
   }
 };

@@ -27,6 +27,17 @@ function getFnName(fn) {
   return (!f && 'not a function') || (s && s[1] || 'anonymous');
 }
 
+function getElementFromId(array, key, id) {
+  var i = array.length;
+  if (id < i)
+    i = id;
+  while (--i >= 0) {
+    if (array[i][key] == id)
+      return array[i];
+  }
+  return false;
+}
+
 function handleDisconnect() {
   connection = mysql.createConnection(db_config.global);
   connection.connect(function(err) {
@@ -108,6 +119,7 @@ function initCacheTopics() {
         topic.html = markdown.toHTML(topic.markdown);
         topic.fr_html = topic.fr_markdown ? markdown.toHTML(topic.fr_markdown) : '';
       }
+      console.log(topics);
     }
   });
 }
@@ -146,6 +158,68 @@ function insertLink(cache, name, adr, icon, localeIndex) {
         locales[i].links.push({ name: v[0], adr: v[1], icon: v[2], sorted: 1 });
       }
       else { locales[v[3]].links.push({ name: v[0], adr: v[1], icon: v[2], sorted: 1 }); }
+    }
+  });
+}
+/*
+  topic is an array of
+    answerTo
+    postedBy
+    category
+    title
+    markdown
+    fr_title (can be null)
+    fr_markdown (can be null)
+*/
+function insertTopic(cache, topic) {
+  connection.query(queries.INSERT.topic, topic,
+  function (err, docs) {
+    if (err) { console.log(getFnName(this), "->", err); }
+    else {
+      var v = this.values;
+      topics.push({
+        'id':docs.insertId,
+        'answerTo': v[0],
+        'postedBy': v[1],
+        'editedBy': null,
+        'deletedBy': null,
+        'category': v[2],
+        'editDate': null,
+        'postDate': new Date(),
+        'title': v[3],
+        'markdown': v[4],
+        'html': markdown.toHTML(v[4]),
+        'fr_title': v[5],
+        'fr_markdown': v[6],
+        'fr_html': v[6] ? markdown.toHTML(v[6]) : null
+      });
+    }
+  });
+}
+// updatedTopic [editedBy, deletedBy, title, markdown, fr_title, fr_markdown, id]
+function updateTopic(cache, updatedValues) {
+  connection.query(queries.UPDATE.topic, [
+    updatedValues.editedBy,
+    updatedValues.deletedBy,
+    updatedValues.title,
+    updatedValues.markdown,
+    updatedValues.fr_title,
+    updatedValues.fr_markdown,
+    updatedValues.id
+  ],
+  function (err, docs) {
+    if (err) { console.log(getFnName(this), "->", err); }
+    else {
+      var topic = cache.getTopic(updatedValues.id);
+      topic.editedBy = updatedValues.editedBy;
+      topic.deletedBy = updatedValues.deletedBy;
+      topic.editDate = new Date();
+      topic.title = updatedValues.title;
+      topic.markdown = updatedValues.markdown;
+      topic.html = markdown.toHTML(updatedValues.markdown);
+      topic.fr_title = updatedValues.fr_title;
+      topic.fr_markdown = updatedValues.fr_markdown;
+      topic.fr_html = updatedValues.fr_markdown ? markdown.toHTML(updatedValues.fr_markdown) : null;
     }
   });
 }
@@ -330,7 +404,9 @@ var cache = {
       accounts[i].characters = [];
     }
   },
+  updateTopic: function(updatedValues) { updatedTopic(this, updatedValues); },
   updateCharacters: function(characters) {
+    console.log(characters.length);
 
     var account = {id:0};
     for (var i = 0; i < characters.length; i++) {
@@ -339,6 +415,7 @@ var cache = {
       if (account === false) { return; }
       account.characters.push(character);
     };
+    console.log(accounts[0].characters.length);
   },
   setRealmlist: function(data) { realmlist = data; },
   getRealm: function(realmID) {
@@ -353,9 +430,46 @@ var cache = {
   updateUserdata: updateUserdata,
   getRealmlist: function() { return realmlist; },
   getAccounts: function() { return accounts; },
-  getAccount: getAccountFromUsername,
-  getTopics: function() { return topics; },
+  getAccount: function(idOrName) {
+    if (typeof idOrName === "string")
+      return getAccountFromUsername(idOrName);
+    return getElementFromId(accounts, "id", id);
+  },
   getRoles: function() { return roles; },
+  searchTopics: function(keyword) {
+    keyword = keyword.toLowerCase();
+    var matchedTopics = [];
+    for (var i = topics.length - 1; i >= 0; i--) {
+      var score = 0;
+      if (topics[i].title.toLowerCase().search(keyword))
+        score = 50;
+      var text = topics[i].markdown.toLowerCase();
+      var i = text.search(keyword);
+      var currentIndex = 0;
+      // enough for temporary search features, should use a real search engine later on, maybe elasticsearch
+      while (i >= 0) {
+        currentIndex += i;
+        i = text.substring(currentIndex).search(keyword);
+        score++;
+      }
+      if (score)
+        matchedTopics.push({'score': score, 'topic': topics[i]});
+    }
+    return (matchedTopics.length) ? matchedTopics.sort(function(a, b) { return b.score - a.score; }) : false;
+  },
+  getTopics: function() { return topics; },
+  getTopic: function(id) { return getElementFromId(topics, "id", id); },
+  addTopic: function(topic) {
+    insertTopic(this, [
+      topic.answerTo,
+      topic.postedBy,
+      topic.category,
+      topic.title,
+      topic.markdown,
+      topic.fr_title ? topic.fr_title : null,
+      topic.fr_markdown ? topic.fr_markdown : null
+    ]);
+  },
   addLink: function(name, adr, icon, common) {
     if (common)
       insertLink(this, name, adr, icon, 0);
@@ -371,7 +485,7 @@ var cache = {
   },
   getLocales: function() { return locales; },
   getLocaleIndex: function(locale) {
-    if (isNaN(locale)) {
+    if (typeof locale === "string") {
       for (var i = locales.length - 1; i >= 0; i--) {
         if (locales[i].name == locale)
           return i;
@@ -380,7 +494,7 @@ var cache = {
     return 1;
   },
   getLocale: function(locale) {
-    if (isNaN(locale)) {
+    if (typeof locale === "string") {
       for (var i = locales.length - 1; i >= 0; i--) {
         if (locales[i].name == locale)
           return locales[i];
