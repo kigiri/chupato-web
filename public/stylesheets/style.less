@@ -33,10 +33,55 @@
   font-weight: normal;
   font-style: normal;
 }
+
+html { height: calc(~'100% + 1px'); }
+body {
+  min-width: 736px;
+  background-color: @bg-dark;
+  color: @normal;
+  padding: 15px;
+  margin: 0;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 14px;
+}
+
+a {
+  -webkit-backface-visibility: hidden;
+  color: @detail;
+  outline: none;
+  text-decoration: none;
+  &:hover {
+    outline: none;
+    color: @hover;
+  }
+  &:focus {
+    color: @highlight;
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.20);
+  }
+}
+
+h1 { margin: 0; }
+
+button {
+  background-color: @bg-light;
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  border: 1px solid @bg-light;
+  &:focus {
+    border-color: #35584E;
+    outline-color: transparent;
+    outline-style: none;
+    outline: none;
+  }
+}
+
+.spacer { clear: both; }
+
 .highlight-block, .dark-block, .mid-block, .light-block {
   box-shadow: 0 0 2px darken(@bg-dark, 3%);
   border: 1px solid;
 }
+
 .highlight-block {
   background-color: @highlight;
   border-color: lighten(@highlight, 3%);
@@ -45,6 +90,7 @@
     border-color: lighten(@highlight, 5%);
   }
 }
+
 .dark-block {
   background-color: @bg-dark;
   border-color: lighten(@bg-dark, 3%);
@@ -72,10 +118,6 @@
   }
 }
 
-.highlight {
-  background-color: @highlight;
-}
-
 .ui {
   cursor: pointer;
   -webkit-touch-callout: none;
@@ -84,37 +126,20 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  &:hover { color: @highlight; 
-    text-shadow: @highlight-sh 0 0 5px;}
+  &:hover {
+    color: @highlight;
+    text-shadow: @highlight-sh 0 0 5px;
+  }
 }
 
-.dark {
-  background-color: @bg-dark;
-}
-
-
-.mid {
-  background-color: @bg-mid;
-}
-
-.light {
-  background-color: @bg-light;
-}
-
-.small {
-  width: @small;
-}
-
-.large {
-  width: @large;
-}
-
-.left {
-  float: left;
-}
-.right {
-  float: right;
-}
+.highlight { background-color: @highlight; }
+.dark { background-color: @bg-dark; }
+.mid { background-color: @bg-mid; }
+.light { background-color: @bg-light; }
+.small { width: @small; }
+.large { width: @large; }
+.left { float: left; }
+.right { float: right; }
 
 .@{fa-css-prefix} {
   display: inline-block;
@@ -132,13 +157,7 @@
      -moz-transition: all 200ms;
        -o-transition: all 200ms;
           transition: all 200ms;
-  &:hover {
-    outline: none;
-    -webkit-transition: all 200ms;
-       -moz-transition: all 200ms;
-         -o-transition: all 200ms;
-            transition: all 200ms;
-  }
+  &:hover { outline: none; }
 }
 .rotate {
   -webkit-animation: rotation 20s infinite linear;
@@ -153,57 +172,7 @@
           animation: rotation 1s infinite linear;
 }
 
-button {
-  background-color: @bg-light;
-  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-  border: 1px solid @bg-light;
-  &:focus {
-    border-color: #35584E;
-    outline-color: transparent;
-    outline-style: none;
-    outline: none;
-  }
-}
-html {
-  height: calc(~'100% + 1px');
-}
-body {
-  min-width: 736px;
-  background-color: @bg-dark;
-  color: @normal;
-  padding: 15px;
-  margin: 0;
-  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
-  font-size: 14px;
-}
-
-a {
-  -webkit-backface-visibility: hidden;
-  color: @detail;
-  outline: none;
-  text-decoration: none;
-  &:hover {
-    outline: none;
-    color: @hover;
-  }
-  &:focus {
-    color: @highlight;
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.20);
-  }
-}
-
-h1 {
-  margin: 0;
-}
-
-.spacer {
-  clear: both;
-}
-
-.item {
-  float: left;
-}
+.item { float: left; }
 
 .bold {
   font-weight: bold;
@@ -222,17 +191,75 @@ h1 {
 
 .noborder { border: none!important; }
 
+.colorfade {
+  // Hover on
+  -webkit-transition: color 250ms;
+     -moz-transition: color 250ms;
+       -o-transition: color 250ms;
+          transition: color 250ms;
+}
+
+@-webkit-keyframes progress-bar-stripes {
+  from { background-position: 40px 0; }
+  to { background-position: 0 0; }
+}
+
+@-o-keyframes progress-bar-stripes {
+  from { background-position: 40px 0; }
+  to { background-position: 0 0; }
+}
+
+@keyframes progress-bar-stripes {
+  from { background-position: 40px 0; }
+  to { background-position: 0 0; }
+}
+
+@-webkit-keyframes progress-bar-stripes-reverse {
+  from { background-position: 0 0; }
+  to { background-position: 40px 0; }
+}
+
+@-o-keyframes progress-bar-stripes-reverse {
+  from { background-position: 0 0; }
+  to { background-position: 40px 0; }
+}
+
+@keyframes progress-bar-stripes-reverse {
+  from { background-position: 0 0; }
+  to { background-position: 40px 0; }
+}
+
+.progress {
+  background: @bg-dark;
+  box-shadow: inset 0px -1px 0 0 rgba(0, 0, 0, 0.5), inset 0px 9px 29px -6px rgba(255, 255, 255, 0.06);
+  border-radius: 5px;
+  overflow: hidden;
+
+}
+
+.progress-bar {
+  background-color: rgba(154, 236, 204, 0.3);
+  border: none;
+  border-right: 1px solid rgba(157, 255, 216, 0.1);
+  border-top: 1px solid rgba(157, 255, 216, 0.1);
+  box-shadow: 0px 0 17px 3px rgba(0, 0, 0, 0.6);
+}
+
+.stripe {
+  background-image: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.15) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(0, 0, 0, 0.15) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.15) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0.15) 75%, transparent 75%, transparent);
+  background-size: 40px 40px;
+  -webkit-animation: progress-bar-stripes-reverse 750ms linear infinite;
+  -o-animation: progress-bar-stripes-reverse 750ms linear infinite;
+  animation: progress-bar-stripes-reverse 750ms linear infinite;
+  transition: width 0.6s ease;
+}
+
 .big {
   line-height: 65px;
   font-size: 32px;
   margin-left: 10px;
-  -webkit-transition: color 500ms;
-     -moz-transition: color 500ms;
-       -o-transition: color 500ms;
-          transition: color 500ms;
-}
-
-.text {
 }
 
 @media screen and (max-width: 1100px) {
@@ -258,36 +285,86 @@ h1 {
         margin: 0;
       }
     }
-    a .text {
-      display: none!important;
-    }
+    a .text { display: none!important; }
   }
 }
 
-.hidden {
-  display: none!important;
-}
+.hidden { display: none!important; }
 .showed {
   display: block!important;
   visibility: visible;
 }
 
-#content {
-  //background-color: @bg-mid;
-  //padding: 15px;
-}
-
 #gamefeed {
-  background-color: @bg-invert;
-  border: solid 1px;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-  border-color: @normal;
   width: 100%;
   min-height: 45px;
   max-height: 300px;
   overflow: auto;
   display: hidden;
   margin-bottom: 2px;
+  .event {
+    .countdown {
+      float: right;
+    }
+    .progress-bar {
+      height: 23px;
+      width: 50%;
+    }
+    position: relative;
+    margin: 15px;
+    padding: 5px;
+    font-size: 1.2em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    .bottom-gradient {
+      height: 38px;
+      width: 100%;
+      background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.25) 100%);
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+    .progress {
+      position: absolute;
+      width: calc(~'100% - 70px');
+      height: 25px;
+      bottom: 5px;
+      left: 63px;
+    }
+    &.inactive {
+      .progress-bar {
+        //float: right;
+        background-color: rgba(229, 226, 175, 0.23); //rgba(75, 90, 84, 0.3);
+        border: none;
+        border-top: 1px solid rgba(192, 202, 198, 0.1);
+        border-right: 1px solid rgba(192, 202, 198, 0.1);
+      }
+      .stripe {
+        -webkit-animation: progress-bar-stripes 4s linear infinite;
+        -o-animation: progress-bar-stripes 4s linear infinite;
+        animation: progress-bar-stripes 4s linear infinite;
+      }
+      .icon {
+        @filterString: ~"grayscale(0.65) opacity(0.65)";
+        border-color: #777;
+        -webkit-filter: @filterString;
+        -moz-filter: @filterString;
+        -o-filter: @filterString;
+        -ms-filter: @filterString;
+        filter: @filterString;
+      }
+    }
+    .icon {
+      border: solid 1px @normal;
+      width: 50px;
+      height: 50px;
+      margin-right: 7px;
+      box-shadow: inset 0px 0px 13px 3px black, 0px 0px 1px 2px rgba(0,0,0,0.15);
+      background-size: 100%;
+    }
+    #icon-sleep { background-image: url('http://wow.zamimg.com/images/wow/icons/large/spell_nature_sleep.jpg') }
+    #icon-agm { background-image: url('http://wow.zamimg.com/images/wow/icons/large/inv_misc_armorkit_04.jpg') }
+    #icon-fishing { background-image: url('http://wow.zamimg.com/images/wow/icons/large/trade_fishing.jpg') }
+  }
 }
 
 #gf-btn {
@@ -299,8 +376,10 @@ h1 {
   &:hover {
     color: @highlight;
     text-shadow: @highlight-sh 0 0 5px;
-    i.fa {color: @highlight;
-    text-shadow: @highlight-sh 0 0 5px;}
+    i.fa {
+      color: @highlight;
+      text-shadow: @highlight-sh 0 0 5px;
+    }
   }
   i.fa {
     position: relative;

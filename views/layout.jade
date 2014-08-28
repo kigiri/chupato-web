@@ -6,16 +6,41 @@ html(ng-app="app")
   body
     //- ; account = #{JSON.stringify(account)};
     #wrapper(ng-init='loc = #{JSON.stringify(loc)}')
-      div(ng-controller="menuCtrl")
+      #app(ng-controller="appCtrl")
         #banner
           include ui/banner
         #menu
           include ui/menu
-        #gamefeed(ng-class="gfShow ? 'showed':'hidden'")
-        #gf-btn.dark-block.ui(ng-click="gfShow = !gfShow")
-          i.fa(ng-class="gfShow ? 'fa-sort-up':'fa-sort-down'")
-          | No new notifications in the feed. Click to deploy
-          i.fa(ng-class="gfShow ? 'fa-sort-up':'fa-sort-down'")
+        #event(ng-controller="eventCtrl")
+          #gamefeed.mid-block.hidden(ng-class="gfShow ? 'showed':'hidden'" ng-init="player = {agm: 'Aos', fishing: 'Spam'}; gfShow = true")
+            #block-sleep.event.light-block
+              #icon-sleep.icon.left
+              #time-sleep.countdown 0 min left
+              | The guards are a sleep ! Beware of pirates...
+              .bottom-gradient
+                .progress
+                  #bar-sleep.progress-bar.stripe
+              .spacer
+            #block-agm.event.light-block
+              #icon-agm.icon.left
+              #time-agm.countdown 0 min left
+              | {{player.agm}} snatched the previous Arena Master, prepare yourself for the next one !
+              .bottom-gradient
+                .progress
+                  #bar-agm.progress-bar.stripe
+              .spacer
+            #block-fishing.event.light-block
+              #icon-fishing.icon.left
+              #time-fishing.countdown 0 min left
+              | Congratulation to {{player.fishing}} for winning last fishing contest, but can still catch those rare fish ! Good luck.
+              .bottom-gradient
+                .progress
+                  #bar-fishing.progress-bar.stripe
+              .spacer
+          #gf-btn.dark-block.ui(ng-click="gfShow = !gfShow")
+            i.fa(ng-class="gfShow ? 'fa-sort-up':'fa-sort-down'")
+            | No new notifications in the feed. Click to deploy
+            i.fa(ng-class="gfShow ? 'fa-sort-up':'fa-sort-down'")
         #chat
           include ui/chat
       #content.fadein2

@@ -77,7 +77,7 @@ app.factory('chupaData', function($http) {
   return fac;
 });
 
-app.controller('menuCtrl', function($scope, $timeout, $http, chupaData) {
+app.controller('appCtrl', function($scope, $timeout, $http, chupaData) {
 
   function init() {
     var chatBox = document.getElementById('chat-content');
