@@ -1,20 +1,24 @@
 var socket = require('socket.io');
-var db = require('../database.js');
+var db = require('./database.js');
 var cache = db.getCache();
 
 // setTimeout(function() { console.log(cache.getGameLogs()[0]) }, 1000);
+
+function getTime() { return ~~(Date.now()/1000); }
 
 module.exports = function (server) {
   var io = socket.listen(server);
   var onlines = {};
   var total = 0;
+  var timeLight = 0;
+  var timeFull = 0;
 
-  function handleNewLogs(newLogs) {
-    console.log('New Game Logs :', newLogs);
-    io.sockets.emit('newLogs', newLogs);
-  }
+  function handleNewLogs(data) { io.sockets.emit('newLogs', data); }
+  function refreshLight(data) { io.sockets.emit('refreshLight', data); }
+  function refreshFull(data) { io.sockets.emit('refreshFull', data); }
 
   //Timed Update to check the database
+  setInterval(cache.updateGameLogs, 1500, handleNewLogs);
   setInterval(cache.updateGameLogs, 1500, handleNewLogs);
 
   io.sockets.on('connection', function (client) {

@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../database.js');
+var db = require('../modules/database.js');
 var cache = db.getCache();
 
 router.post('/levelup/:guid/:level/:hours/:min', function (req, res) {
    console.log("personage:", req.param('guid'), "lvl", req.param('level'));
    //setTimeout(function() {res.end("OK")}, 1000);
-   
+
   // io.sockets.emit('broadcastMsg', {"name":"announce", "content": "Some player reached lvl 19 !"});
 });
 

@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 var sha1 = require('sha1');
 var db_config = require('./config');
-var queries = require('./data/queries.js');
+var queries = require('../data/queries.js');
 var locales = [{ name:"common" }, { name:"en" }, { name:"fr" }];
 var markdown = require('markdown').markdown;
 var connection;
@@ -438,18 +438,21 @@ var cache = {
   getRoles: function() { return roles; },
   searchTopics: function(keyword) {
     keyword = keyword.toLowerCase();
+    keywordLength = keyword.length;
+    if (keywordLength < 4)
+      return false;
     var matchedTopics = [];
     for (var i = topics.length - 1; i >= 0; i--) {
       var score = 0;
-      if (topics[i].title.toLowerCase().search(keyword))
+      if (topics[i].title.toLowerCase().search(keyword) >= 0)
         score = 50;
       var text = topics[i].markdown.toLowerCase();
-      var i = text.search(keyword);
+      var j = text.search(keyword);
       var currentIndex = 0;
       // enough for temporary search features, should use a real search engine later on, maybe elasticsearch
-      while (i >= 0) {
-        currentIndex += i;
-        i = text.substring(currentIndex).search(keyword);
+      while (j >= 0) {
+        currentIndex += j + keywordLength;
+        j = text.substring(currentIndex).search(keyword);
         score++;
       }
       if (score)

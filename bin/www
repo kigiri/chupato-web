@@ -9,4 +9,4 @@ var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
 });
 
-var socket = require('../routes/socket.js')(server);
+var socket = require('../modules/socket.js')(server);

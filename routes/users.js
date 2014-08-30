@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../database.js');
+var db = require('../modules/database.js');
 var data = require('../data/locales.js');
 var cache = db.getCache();
 

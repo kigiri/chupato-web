@@ -12,7 +12,7 @@ var topics = require('./routes/topics');
 var game = require('./routes/game');
 var app = express();
 var http = require('http').Server(express);
-var minify = require('./minify')();
+var minify = require('./modules/minify')();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
